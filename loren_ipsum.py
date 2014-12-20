@@ -86,27 +86,29 @@ class Transform(object):
 
     def transform(self, s):
         """Transform a string according to the rules"""
-        logger.debug(s)
 
-        # Iterate through each character in the string and transform it if there is
-        # a rule associated with it. Otherwise, just copy the character.
-        t = []
-        for c in s:
-            if c in self.rules:
-                t.append(random.choice(self.rules[c]))
-            else:
-                t.append(c)
+        previous = str(s)
+        while True:
+            logger.debug(previous)
 
-        t = ''.join(t)
+            # Iterate through each character in the string and transform it if there is
+            # a rule associated with it. Otherwise, just copy the character.
+            current = []
+            for c in previous:
+                if c in self.rules:
+                    current.append(random.choice(self.rules[c]))
+                else:
+                    current.append(c)
 
-        # If the transformed string is identical to the original string, the
-        # transformation is at a fixed point and successive transformations will
-        # have no effect.
-        if s == t:
-            return t
+            current = ''.join(current)
 
-        # Transform again
-        return self.transform(t)
+            # If the transformed string is identical to the original string, the
+            # transformation is at a fixed point and successive transformations will
+            # have no effect.
+            if previous == current:
+                return current
+
+            previous = current
 
 
 def format_sentence(tokens):
