@@ -72,39 +72,41 @@ words = [
         'voluptate',
         ]
 
-# A set of rules for transforming symbols to create sentences
-rules = {}
-rules['F'] = ['A', 'B', 'FB', 'FA', 'FGF']
-rules['S'] = ['FT']
-rules['A'] = ['WW']
-rules['B'] = ['WWW']
-rules['G'] = [',']
-rules['T'] = ['.']
-rules['P'] = ['S', 'PS']
 
-def transform(s):
-    """Transform a string according to the rules"""
-    logger.debug(s)
+class Transform(object):
+    def __init__(self):
+        self.rules = {}
+        self.rules['F'] = ['A', 'B', 'FB', 'FA', 'FGF']
+        self.rules['S'] = ['FT']
+        self.rules['A'] = ['WW']
+        self.rules['B'] = ['WWW']
+        self.rules['G'] = [',']
+        self.rules['T'] = ['.']
+        self.rules['P'] = ['S', 'PS']
 
-    # Iterate through each character in the string and transform it if there is
-    # a rule associated with it. Otherwise, just copy the character.
-    t = []
-    for c in s:
-        if c in rules:
-            t.append(random.choice(rules[c]))
-        else:
-            t.append(c)
+    def transform(self, s):
+        """Transform a string according to the rules"""
+        logger.debug(s)
 
-    t = ''.join(t)
+        # Iterate through each character in the string and transform it if there is
+        # a rule associated with it. Otherwise, just copy the character.
+        t = []
+        for c in s:
+            if c in self.rules:
+                t.append(random.choice(self.rules[c]))
+            else:
+                t.append(c)
 
-    # If the transformed string is identical to the original string, the
-    # transformation is at a fixed point and successive transformations will
-    # have no effect.
-    if s == t:
-        return t
+        t = ''.join(t)
 
-    # Transform again
-    return transform(t)
+        # If the transformed string is identical to the original string, the
+        # transformation is at a fixed point and successive transformations will
+        # have no effect.
+        if s == t:
+            return t
+
+        # Transform again
+        return self.transform(t)
 
 
 def format_sentence(tokens):
@@ -141,11 +143,13 @@ def main(argv=sys.argv[1:]):
         return
 
     if args.action == 'sentence':
-        print(format_sentence(transform('F')))
+        t = Transform()
+        print(format_sentence(t.transform('F')))
         return
 
     if args.action == 'paragraph':
-        print(format_paragraph(transform('P')))
+        t = Transform()
+        print(format_paragraph(t.transform('P')))
 
 
 if __name__ == "__main__":
