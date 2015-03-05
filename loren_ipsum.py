@@ -1,10 +1,17 @@
 #!/usr/bin/env python
+"""
+Usage:
+    loren_ipsum word
+    loren_ipsum sentence
+    loren_ipsum paragraph
+"""
 
-import argparse
 import logging
 import random
 import re
 import sys
+
+import docopt
 
 logger = logging.getLogger('loren-ipsum')
 
@@ -129,27 +136,18 @@ def format_paragraph(paragraph):
 
 
 def main(argv=sys.argv[1:]):
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-v', '--verbose', action='store_true')
-    parser.add_argument('action',
-            choices=('word', 'sentence', 'paragraph'),
-            default='sentence')
+    args = docopt.docopt(__doc__)
 
-    args = parser.parse_args(argv)
-
-    if args.verbose:
-        logger.setLevel(logging.DEBUG)
-
-    if args.action == 'word':
+    if args['word']:
         print(random.choice(words))
         return
 
-    if args.action == 'sentence':
+    if args['sentence']:
         t = Transform()
         print(format_sentence(t.transform('F')))
         return
 
-    if args.action == 'paragraph':
+    if args['paragraph']:
         t = Transform()
         print(format_paragraph(t.transform('P')))
 
